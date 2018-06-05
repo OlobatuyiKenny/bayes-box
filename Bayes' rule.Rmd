@@ -1,0 +1,48 @@
+---
+title: "Bayes'Box"
+author: "Olobatuyi Kehinde Ibukun"
+date: "6/2/2018"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+
+baye = function(theta, x, n){
+  combination = function(n, x){
+  comb = factorial(n)/(factorial(n-x)*factorial(x))
+  }
+  m = length(theta)
+  prior = 1/m
+  prior = rep(prior, m)
+  if(theta > 1 || theta < 0){
+    cat("STOP! theta must be between 0 and 1 inclsively")
+  }
+  else{
+    bayes.box = array(0, c(length(theta), 5))
+    for (i in 1:length(theta)) {
+      bayes.box[i,1] = theta[i]
+      bayes.box[i, 2] = prior[i]
+      bayes.box[i, 3] = combination(n, x) * (theta[i]^x) * (1-theta[i])^(n-x)
+      bayes.box[i, 4] = prior[i] * bayes.box[i, 3]
+    }
+    z = sum(bayes.box[, 4])
+    bayes.box[, 5] = bayes.box[, 4]/z
+    #print(z)
+    colnames(bayes.box) = c("posible vlaues", "prior", "likelihood", 
+                            "prior X likelihood", "posterior")
+    return(bayes.box)  
+    }
+  
+}
+
+baye(theta = seq(0, 1, by = 0.1), 2, 5)
+
+```
+
